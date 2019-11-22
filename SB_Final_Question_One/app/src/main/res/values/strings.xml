@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SB_Final_Question_One</string>
+    <string name="title_activity_web_view">Web View</string>
 </resources>
