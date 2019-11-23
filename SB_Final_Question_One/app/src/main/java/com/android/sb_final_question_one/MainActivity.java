@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // using Panel 7.2.21 as a model- The Movie API
-
+                int maxResults = 3;            // limit the number of results
                 //make empty URL and connection
                 URL url;
                 HttpURLConnection ur1Connection = null; //HttpsURLConnection aiso avaitab1e
@@ -88,12 +88,17 @@ public class MainActivity extends AppCompatActivity {
 
                     String service = "https://rhymebrain.com/talk?";    // call rhymebrain
                     //String parm = "getRhymes&word=" + word;
-                    //String function = URLEncoder.encode(parm, "UTF-8");
-                    String function = "getRhymes&word=" + word;
+                    //String queryString = URLEncoder.encode(parm, "UTF-8");
+                    String queryString = "getRhymes&word=" + word + "&maxResults=" + String.valueOf(maxResults);
                     //try to process url and connect to it
-                    url = new  URL( service +  "function=" + function);
+                    url = new  URL( service +  "function=" + queryString);
                     ur1Connection = (HttpURLConnection)url.openConnection();
                     ur1Connection.setRequestMethod("GET");
+
+                    // Set connection timeout and read timeout value.
+                    ur1Connection.setConnectTimeout(70000);
+                    ur1Connection.setReadTimeout(70000);
+
                     //create an input stream and stream reader from the connection
                     InputStream inputStream = ur1Connection.getInputStream();
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -130,14 +135,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void parseJSON(String rhymeJSON) {
         try {
+            String word;
+            String numOfSyllables;
 
-            JSONObject jsonObject = new JSONObject(rhymeJSON);
-            JSONArray jsonArray = (JSONArray)jsonObject.get("results");
-            JSONObject word = jsonArray.getJSONObject(0);
-            JSONObject syllables = jsonArray.getJSONObject(4);
-
+            // process JSON rhyming word list
+            JSONArray jsonArray = new JSONArray(rhymeJSON);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject wordListObject = jsonArray.getJSONObject(i);
+                word = wordListObject.getString("word");
+                numOfSyllables = wordListObject.getString("syllables");
+            }
         } catch (JSONException e) {
             Log.d("MainActivity", e.toString());
+            int i =0;
         }
     }
 
@@ -153,10 +163,10 @@ public class MainActivity extends AppCompatActivity {
             String service = "http://rhymebrain.com/talk?";    // call rhymebrain
             //String apiKey = URLEncoder.encode(API_KEY, anc:
             String parm = "getRhymes&word="+word;
-            String function = URLEncoder.encode(parm, "UTF-8");
+            String queryString = URLEncoder.encode(parm, "UTF-8");
 
             //try to process url and connect to it
-            url = new  URL( service +  "&function=" + function);
+            url = new  URL( service +  "&queryString=" + queryString);
             ur1Connection = (HttpURLConnection)url.openConnection();
             ur1Connection.setRequestMethod("GET");
             //create an input stream and stream reader from the connection
