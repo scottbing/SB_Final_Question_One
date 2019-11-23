@@ -22,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,15 @@ public class MainActivity extends AppCompatActivity {
     private String reqUrl = "http://rhymebrain.com/talk?";    // call rhymebrain
     private static final String REQUEST_METHOD_GET = "GET";
     private static final String TAG_HTTP_URL_CONNECTION = "HTTP_URL_CONNECTION";
+
+    // Syllable Arrays
+    private ArrayList<String> one_syllable;
+    private ArrayList<String> two_syllable;
+    private ArrayList<String> three_syllable;
+    private ArrayList<String> four_syllable;
+    private ArrayList<String> five_syllable;
+    private ArrayList<String> six_syllable;
+    private ArrayList<String> seven_syllable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,12 +148,48 @@ public class MainActivity extends AppCompatActivity {
             String word;
             String numOfSyllables;
 
+            // establish syllable arrays
+            ArrayList<String> one_syllable = new ArrayList<String>();
+            ArrayList<String> two_syllable = new ArrayList<String>();
+            ArrayList<String> three_syllable = new ArrayList<String>();
+            ArrayList<String> four_syllable = new ArrayList<String>();
+            ArrayList<String> five_syllable = new ArrayList<String>();
+            ArrayList<String> six_syllable = new ArrayList<String>();
+            ArrayList<String> seven_syllable = new ArrayList<String>();
+
             // process JSON rhyming word list
             JSONArray jsonArray = new JSONArray(rhymeJSON);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject wordListObject = jsonArray.getJSONObject(i);
                 word = wordListObject.getString("word");
                 numOfSyllables = wordListObject.getString("syllables");
+
+                switch (numOfSyllables) {
+                    case "1":
+                        one_syllable.add(word);
+                        break;
+                    case "2":
+                        two_syllable.add(word);
+                        break;
+                    case "3":
+                        three_syllable.add(word);
+                        break;
+                    case "4":
+                        four_syllable.add(word);
+                        break;
+                    case "5":
+                        five_syllable.add(word);
+                        break;
+                    case "6":
+                        six_syllable.add(word);
+                        break;
+                    case "7":
+                        seven_syllable.add(word);
+                        break;
+                    default:
+                        // throw it away
+                        break;
+                }
             }
         } catch (JSONException e) {
             Log.d("MainActivity", e.toString());
